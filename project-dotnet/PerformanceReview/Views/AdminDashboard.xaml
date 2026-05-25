@@ -1,0 +1,185 @@
+<Window x:Class="PerformanceReview.Views.AdminDashboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Admin Dashboard - Performance Review System" Width="1200" Height="800"
+        MinWidth="900" MinHeight="600" WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="0,0,0,16" Padding="20,14">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🛡️" FontSize="28" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                    <StackPanel>
+                        <TextBlock Text="Admin Dashboard" Style="{StaticResource HeadingLabel}" FontSize="20"/>
+                        <TextBlock Text="System Management &amp; Analytics" Style="{StaticResource BodyLabel}"/>
+                    </StackPanel>
+                </StackPanel>
+                <Button Content="🚪 Logout" Style="{StaticResource SecondaryButton}"
+                        HorizontalAlignment="Right" Click="Logout_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Tab Control -->
+        <TabControl Grid.Row="1" Style="{StaticResource DarkTabControl}">
+            <!-- Users Tab -->
+            <TabItem Header="👥 Users" Style="{StaticResource DarkTabItem}">
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="User Management" Style="{StaticResource SubheadingLabel}" Margin="0,0,0,12"/>
+                        <DataGrid Grid.Row="1" x:Name="UsersGrid" Style="{StaticResource DarkDataGrid}"
+                                  SelectionChanged="UsersGrid_SelectionChanged">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="120"/>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="160"/>
+                                <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="140"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                                <DataGridTextColumn Header="Tier" Binding="{Binding TierLevel}" Width="60"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Left">
+                            <Button Content="✅ Approve" Style="{StaticResource PrimaryButton}" Click="ApproveUser_Click" Margin="0,0,8,0" Padding="12,8"/>
+                            <Button Content="⏸️ Toggle Status" Style="{StaticResource SecondaryButton}" Click="ToggleStatus_Click" Margin="0,0,8,0"/>
+                            <Button Content="🗑️ Delete" Style="{StaticResource DangerButton}" Click="DeleteUser_Click" Margin="0,0,8,0"/>
+                            <Button Content="🔄 Refresh" Style="{StaticResource SecondaryButton}" Click="RefreshUsers_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- Hierarchy Tab -->
+            <TabItem Header="🏗️ Hierarchy" Style="{StaticResource DarkTabItem}">
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Assign Hierarchy" Style="{StaticResource SubheadingLabel}" Margin="0,0,0,12"/>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+                            <StackPanel Margin="0,0,16,0">
+                                <TextBlock Text="Employee" Style="{StaticResource BodyLabel}" Margin="0,0,0,4"/>
+                                <ComboBox x:Name="HierarchyEmployeeCombo" Style="{StaticResource DarkComboBox}" Width="200"
+                                          DisplayMemberPath="DisplayName"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,16,0">
+                                <TextBlock Text="Manager" Style="{StaticResource BodyLabel}" Margin="0,0,0,4"/>
+                                <ComboBox x:Name="HierarchyManagerCombo" Style="{StaticResource DarkComboBox}" Width="200"
+                                          DisplayMemberPath="DisplayName"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,16,0">
+                                <TextBlock Text="Tier Level" Style="{StaticResource BodyLabel}" Margin="0,0,0,4"/>
+                                <ComboBox x:Name="HierarchyTierCombo" Style="{StaticResource DarkComboBox}" Width="80"/>
+                            </StackPanel>
+                            <Button Content="Assign" Style="{StaticResource PrimaryButton}" Click="AssignHierarchy_Click"
+                                    VerticalAlignment="Bottom" Padding="16,8"/>
+                        </StackPanel>
+                        <TextBox Grid.Row="2" x:Name="HierarchyDisplay" Style="{StaticResource DarkTextBox}"
+                                 IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                 FontFamily="Consolas" FontSize="12"/>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- Reviews Tab -->
+            <TabItem Header="📝 Reviews" Style="{StaticResource DarkTabItem}">
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="All Reviews" Style="{StaticResource SubheadingLabel}" Margin="0,0,0,12"/>
+                        <DataGrid Grid.Row="1" x:Name="ReviewsGrid" Style="{StaticResource DarkDataGrid}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Employee" Binding="{Binding Employee.Name}" Width="150"/>
+                                <DataGridTextColumn Header="Reviewer" Binding="{Binding Reviewer.Name}" Width="150"/>
+                                <DataGridTextColumn Header="Punct" Binding="{Binding PunctualityScore}" Width="60"/>
+                                <DataGridTextColumn Header="Team" Binding="{Binding TeamworkScore}" Width="60"/>
+                                <DataGridTextColumn Header="Prod" Binding="{Binding ProductivityScore}" Width="60"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- Reports Tab -->
+            <TabItem Header="📊 Reports" Style="{StaticResource DarkTabItem}">
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
+                            <Button Content="📋 Summary" Style="{StaticResource PrimaryButton}" Click="SummaryReport_Click" Margin="0,0,8,0" Padding="12,8"/>
+                            <Button Content="📚 Training" Style="{StaticResource SecondaryButton}" Click="TrainingReport_Click" Margin="0,0,8,0"/>
+                            <Button Content="📥 Export All" Style="{StaticResource SecondaryButton}" Click="ExportAll_Click" Margin="0,0,8,0"/>
+                        </StackPanel>
+                        <TextBox Grid.Row="1" x:Name="ReportDisplay" Style="{StaticResource DarkTextBox}"
+                                 IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"
+                                 FontFamily="Consolas" FontSize="12"/>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- Approvals Tab -->
+            <TabItem Header="⏳ Approvals" Style="{StaticResource DarkTabItem}">
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Pending Approvals" Style="{StaticResource SubheadingLabel}" Margin="0,0,0,12"/>
+                        <DataGrid Grid.Row="1" x:Name="ApprovalsGrid" Style="{StaticResource DarkDataGrid}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Requested By" Binding="{Binding RequestedBy.Name}" Width="150"/>
+                                <DataGridTextColumn Header="Action" Binding="{Binding ActionType}" Width="120"/>
+                                <DataGridTextColumn Header="Target" Binding="{Binding TargetUser.Name}" Width="150"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
+                            <Button Content="✅ Approve" Style="{StaticResource PrimaryButton}" Click="ApproveAction_Click" Margin="0,0,8,0" Padding="12,8"/>
+                            <Button Content="❌ Reject" Style="{StaticResource DangerButton}" Click="RejectAction_Click" Padding="12,8"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- Courses Tab -->
+            <TabItem Header="📚 Courses" Style="{StaticResource DarkTabItem}">
+                <Border Style="{StaticResource CardBorder}" Margin="0,8,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Course Management" Style="{StaticResource SubheadingLabel}" Margin="0,0,0,12"/>
+                        <ListBox Grid.Row="1" x:Name="CoursesListBox" Style="{StaticResource DarkListBox}"/>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBox x:Name="NewCourseBox" Style="{StaticResource DarkTextBox}" Width="250" Margin="0,0,8,0"/>
+                            <Button Content="➕ Add" Style="{StaticResource PrimaryButton}" Click="AddCourse_Click" Padding="12,8" Margin="0,0,8,0"/>
+                            <Button Content="🗑️ Remove" Style="{StaticResource DangerButton}" Click="RemoveCourse_Click" Padding="12,8"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

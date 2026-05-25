@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<title>Performance Review System - Database Documentation Report</title>
+<style>
+    @page {
+        size: A4;
+        margin: 2.54cm;
+    }
+    body {
+        font-family: 'Calibri', 'Arial', sans-serif;
+        font-size: 11pt;
+        line-height: 1.5;
+        color: #000000;
+        background: #ffffff;
+        max-width: 21cm;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .cover-page {
+        text-align: center;
+        page-break-after: always;
+        padding-top: 150px;
+    }
+    .cover-title {
+        font-size: 28pt;
+        font-weight: bold;
+        color: #1a365d;
+        margin-bottom: 20px;
+    }
+    .cover-subtitle {
+        font-size: 16pt;
+        color: #4a5568;
+        margin-bottom: 40px;
+    }
+    .cover-meta {
+        font-size: 12pt;
+        color: #718096;
+        margin-top: 100px;
+    }
+    h1 {
+        font-size: 18pt;
+        font-weight: bold;
+        color: #1a365d;
+        border-bottom: 2px solid #1a365d;
+        padding-bottom: 8px;
+        margin-top: 30px;
+        page-break-after: avoid;
+    }
+    h2 {
+        font-size: 14pt;
+        font-weight: bold;
+        color: #2c5282;
+        margin-top: 25px;
+        page-break-after: avoid;
+    }
+    h3 {
+        font-size: 12pt;
+        font-weight: bold;
+        color: #2d3748;
+        margin-top: 20px;
+        page-break-after: avoid;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 10pt;
+        page-break-inside: avoid;
+    }
+    th {
+        background-color: #2c5282;
+        color: white;
+        font-weight: bold;
+        padding: 10px 8px;
+        text-align: left;
+        border: 1px solid #2c5282;
+    }
+    td {
+        padding: 8px;
+        border: 1px solid #e2e8f0;
+        vertical-align: top;
+    }
+    tr:nth-child(even) {
+        background-color: #f7fafc;
+    }
+    .code {
+        font-family: 'Consolas', 'Courier New', monospace;
+        background-color: #edf2f7;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 9pt;
+    }
+    .enum-list {
+        background-color: #f7fafc;
+        border-left: 4px solid #2c5282;
+        padding: 10px 15px;
+        margin: 10px 0;
+    }
+    .enum-list ul {
+        margin: 5px 0;
+        padding-left: 20px;
+    }
+    .fk-note {
+        background-color: #ebf8ff;
+        border-left: 4px solid #3182ce;
+        padding: 10px 15px;
+        margin: 10px 0;
+    }
+    .business-rule {
+        background-color: #faf5ff;
+        border-left: 4px solid #805ad5;
+        padding: 10px 15px;
+        margin: 10px 0;
+    }
+    .toc {
+        background-color: #f7fafc;
+        padding: 20px;
+        margin: 20px 0;
+        border: 1px solid #e2e8f0;
+    }
+    .toc-title {
+        font-size: 14pt;
+        font-weight: bold;
+        color: #1a365d;
+        margin-bottom: 15px;
+    }
+    .toc ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    .toc li {
+        padding: 5px 0;
+    }
+    .toc a {
+        color: #2c5282;
+        text-decoration: none;
+    }
+    .page-break {
+        page-break-before: always;
+    }
+    .summary-box {
+        background-color: #e6fffa;
+        border: 2px solid #38b2ac;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+    }
+    .summary-title {
+        font-weight: bold;
+        color: #234e52;
+        margin-bottom: 10px;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 25px 0;
+    }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover-page">
+    <div class="cover-title">Performance Review System</div>
+    <div class="cover-subtitle">Database Documentation Report</div>
+    <div style="font-size: 14pt; color: #2c5282; margin-top: 30px;">
+        <strong>Version 2.0</strong><br>
+        SQLite Database - 9 Tables
+    </div>
+    <div class="cover-meta">
+        <p><strong>Document Type:</strong> Technical Specification</p>
+        <p><strong>Generated:</strong> December 22, 2024</p>
+        <p><strong>Database Engine:</strong> SQLite</p>
+    </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ul>
+        <li>1. Executive Summary</li>
+        <li>2. Database Schema Overview</li>
+        <li>3. Table Specifications
+            <ul>
+                <li>3.1 USERS Table</li>
+                <li>3.2 REVIEWS Table</li>
+                <li>3.3 GOALS Table</li>
+                <li>3.4 COURSES Table</li>
+                <li>3.5 TRAINING_RECOMMENDATIONS Table</li>
+                <li>3.6 PEER_REVIEWS Table</li>
+                <li>3.7 UPWARD_REVIEWS Table</li>
+                <li>3.8 PENDING_ACTIONS Table</li>
+                <li>3.9 SKILL_GAPS Table</li>
+            </ul>
+        </li>
+        <li>4. Relationship Mapping</li>
+        <li>5. Business Requirements</li>
+        <li>6. Database Indexes</li>
+        <li>7. Data Integrity Rules</li>
+        <li>8. Default Data</li>
+    </ul>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<h1>1. Executive Summary</h1>
+
+<div class="summary-box">
+    <div class="summary-title">Database Overview</div>
+    <table>
+        <tr><td><strong>Total Tables:</strong></td><td>9</td></tr>
+        <tr><td><strong>Database Engine:</strong></td><td>SQLite</td></tr>
+        <tr><td><strong>Primary Purpose:</strong></td><td>Employee Performance Management</td></tr>
+        <tr><td><strong>Total Indexes:</strong></td><td>13</td></tr>
+    </table>
+</div>
+
+<h3>Table Summary</h3>
+<table>
+    <tr>
+        <th>#</th>
+        <th>Table Name</th>
+        <th>Purpose</th>
+    </tr>
+    <tr><td>1</td><td>USERS</td><td>User accounts &amp; organizational hierarchy (self-referencing)</td></tr>
+    <tr><td>2</td><td>REVIEWS</td><td>Performance reviews (0-10 scale, 6 categories)</td></tr>
+    <tr><td>3</td><td>GOALS</td><td>Employee goals with status tracking</td></tr>
+    <tr><td>4</td><td>COURSES</td><td>Training course catalog</td></tr>
+    <tr><td>5</td><td>TRAINING_RECOMMENDATIONS</td><td>Training assignments from managers</td></tr>
+    <tr><td>6</td><td>PEER_REVIEWS</td><td>Anonymous teammate reviews (1-5 scale)</td></tr>
+    <tr><td>7</td><td>UPWARD_REVIEWS</td><td>Anonymous manager reviews by direct reports</td></tr>
+    <tr><td>8</td><td>PENDING_ACTIONS</td><td>Manager requests requiring admin approval</td></tr>
+    <tr><td>9</td><td>SKILL_GAPS</td><td>Cached skill gap analysis results</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- TABLE SPECIFICATIONS -->
+<h1>2. Table Specifications</h1>
+
+<h2>2.1 USERS Table</h2>
+<p>Central table storing all user accounts and organizational hierarchy through self-referencing.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique user identifier</td></tr>
+    <tr><td><span class="code">username</span></td><td>TEXT</td><td>UNIQUE, NOT NULL</td><td>Login username</td></tr>
+    <tr><td><span class="code">password</span></td><td>TEXT</td><td>NOT NULL</td><td>User password</td></tr>
+    <tr><td><span class="code">name</span></td><td>TEXT</td><td>NOT NULL</td><td>Display name</td></tr>
+    <tr><td><span class="code">role</span></td><td>TEXT</td><td>DEFAULT 'EMPLOYEE', CHECK</td><td>User role (see enum below)</td></tr>
+    <tr><td><span class="code">status</span></td><td>TEXT</td><td>DEFAULT 'PENDING', CHECK</td><td>Account status (see enum below)</td></tr>
+    <tr><td><span class="code">tier_level</span></td><td>INTEGER</td><td>DEFAULT 1</td><td>Organizational hierarchy level</td></tr>
+    <tr><td><span class="code">manager_id</span></td><td>INTEGER</td><td>FOREIGN KEY → users(id)</td><td>Reference to manager user</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Account creation date</td></tr>
+</table>
+
+<div class="enum-list">
+    <strong>Role Enum Values:</strong>
+    <ul>
+        <li><span class="code">ADMIN</span> - System administrator with full access</li>
+        <li><span class="code">EMPLOYEE</span> - Regular employee (Tier 1)</li>
+        <li><span class="code">MANAGER_EMPLOYEE</span> - Manager who is also an employee (Tier 2)</li>
+        <li><span class="code">HIGHBOARD_MANAGER</span> - Senior/executive manager (Tier 3)</li>
+    </ul>
+</div>
+
+<div class="enum-list">
+    <strong>Status Enum Values:</strong>
+    <ul>
+        <li><span class="code">ACTIVE</span> - Active user account</li>
+        <li><span class="code">PENDING</span> - Awaiting approval</li>
+        <li><span class="code">SUSPENDED</span> - Temporarily disabled</li>
+    </ul>
+</div>
+
+<div class="fk-note">
+    <strong>Self-Referencing Relationship:</strong> manager_id → users.id (ON DELETE SET NULL)
+</div>
+
+<hr>
+
+<h2>2.2 REVIEWS Table</h2>
+<p>Stores performance review scores given to employees by reviewers.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique review identifier</td></tr>
+    <tr><td><span class="code">employee_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Employee being reviewed</td></tr>
+    <tr><td><span class="code">reviewer_id</span></td><td>INTEGER</td><td>FOREIGN KEY</td><td>Person giving the review</td></tr>
+    <tr><td><span class="code">punctuality</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(0-10)</td><td>Punctuality score</td></tr>
+    <tr><td><span class="code">teamwork</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(0-10)</td><td>Teamwork score</td></tr>
+    <tr><td><span class="code">productivity</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(0-10)</td><td>Productivity score</td></tr>
+    <tr><td><span class="code">leadership</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(0-10)</td><td>Leadership score (managers only)</td></tr>
+    <tr><td><span class="code">vision</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(0-10)</td><td>Vision score (managers only)</td></tr>
+    <tr><td><span class="code">managerial_skills</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(0-10)</td><td>Managerial skills score (managers only)</td></tr>
+    <tr><td><span class="code">comments</span></td><td>TEXT</td><td>-</td><td>Review comments/feedback</td></tr>
+    <tr><td><span class="code">status</span></td><td>TEXT</td><td>DEFAULT 'SUBMITTED'</td><td>Review status</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Review creation date</td></tr>
+</table>
+
+<div class="fk-note">
+    <strong>Foreign Key Relationships:</strong>
+    <ul>
+        <li>employee_id → users.id (ON DELETE CASCADE)</li>
+        <li>reviewer_id → users.id (ON DELETE SET NULL)</li>
+    </ul>
+</div>
+
+<div class="business-rule">
+    <strong>Score Categories:</strong>
+    <ul>
+        <li><strong>Basic (All Employees):</strong> Punctuality, Teamwork, Productivity</li>
+        <li><strong>Extended (Managers Only):</strong> Leadership, Vision, Managerial Skills</li>
+    </ul>
+</div>
+
+<hr>
+
+<h2>2.3 GOALS Table</h2>
+<p>Tracks employee goals with status monitoring.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique goal identifier</td></tr>
+    <tr><td><span class="code">employee_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Employee the goal belongs to</td></tr>
+    <tr><td><span class="code">creator_id</span></td><td>INTEGER</td><td>FOREIGN KEY</td><td>Person who created the goal</td></tr>
+    <tr><td><span class="code">description</span></td><td>TEXT</td><td>NOT NULL</td><td>Goal description</td></tr>
+    <tr><td><span class="code">status</span></td><td>TEXT</td><td>DEFAULT 'ACTIVE', CHECK</td><td>Goal status</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Goal creation date</td></tr>
+</table>
+
+<div class="enum-list">
+    <strong>Status Enum Values:</strong>
+    <ul>
+        <li><span class="code">ACTIVE</span> - Goal is in progress</li>
+        <li><span class="code">COMPLETED</span> - Goal has been achieved</li>
+    </ul>
+</div>
+
+<hr>
+
+<h2>2.4 COURSES Table</h2>
+<p>Catalog of available training courses.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique course identifier</td></tr>
+    <tr><td><span class="code">name</span></td><td>TEXT</td><td>UNIQUE, NOT NULL</td><td>Course name</td></tr>
+    <tr><td><span class="code">description</span></td><td>TEXT</td><td>-</td><td>Course description</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Course creation date</td></tr>
+</table>
+
+<hr>
+
+<h2>2.5 TRAINING_RECOMMENDATIONS Table</h2>
+<p>Training course assignments from managers to employees.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique recommendation identifier</td></tr>
+    <tr><td><span class="code">recipient_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Employee receiving the recommendation</td></tr>
+    <tr><td><span class="code">recommender_id</span></td><td>INTEGER</td><td>FOREIGN KEY</td><td>Person making the recommendation</td></tr>
+    <tr><td><span class="code">course_name</span></td><td>TEXT</td><td>NOT NULL</td><td>Name of recommended course</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Recommendation date</td></tr>
+</table>
+
+<div class="fk-note">
+    <strong>Foreign Key Relationships:</strong>
+    <ul>
+        <li>recipient_id → users.id (ON DELETE CASCADE)</li>
+        <li>recommender_id → users.id (ON DELETE SET NULL)</li>
+    </ul>
+</div>
+
+<div class="page-break"></div>
+
+<h2>2.6 PEER_REVIEWS Table</h2>
+<p>Anonymous reviews from teammates under the same manager.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique peer review identifier</td></tr>
+    <tr><td><span class="code">reviewer_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Employee giving the review</td></tr>
+    <tr><td><span class="code">reviewed_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Teammate being reviewed</td></tr>
+    <tr><td><span class="code">collaboration_score</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(1-5)</td><td>Collaboration score</td></tr>
+    <tr><td><span class="code">communication_score</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(1-5)</td><td>Communication score</td></tr>
+    <tr><td><span class="code">teamwork_score</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(1-5)</td><td>Teamwork score</td></tr>
+    <tr><td><span class="code">comments</span></td><td>TEXT</td><td>-</td><td>Review comments</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Review creation date</td></tr>
+</table>
+
+<div class="business-rule">
+    <strong>Business Rules:</strong>
+    <ul>
+        <li>Reviewer and reviewed must share the same manager</li>
+        <li>Reviews are anonymous (reviewer not exposed to reviewed user)</li>
+    </ul>
+</div>
+
+<hr>
+
+<h2>2.7 UPWARD_REVIEWS Table</h2>
+<p>Anonymous reviews of managers by their direct reports.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique upward review identifier</td></tr>
+    <tr><td><span class="code">reviewer_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Employee giving the review</td></tr>
+    <tr><td><span class="code">manager_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Manager being reviewed</td></tr>
+    <tr><td><span class="code">punctuality_score</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(1-5)</td><td>Punctuality score</td></tr>
+    <tr><td><span class="code">teamwork_score</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(1-5)</td><td>Teamwork score</td></tr>
+    <tr><td><span class="code">productivity_score</span></td><td>INTEGER</td><td>DEFAULT 0, CHECK(1-5)</td><td>Productivity score</td></tr>
+    <tr><td><span class="code">comments</span></td><td>TEXT</td><td>-</td><td>Review comments</td></tr>
+    <tr><td><span class="code">created_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Review creation date</td></tr>
+</table>
+
+<div class="business-rule">
+    <strong>Business Rules:</strong>
+    <ul>
+        <li>Reviewer must be a direct report of the manager</li>
+        <li>Reviews are anonymous (reviewer not exposed to manager)</li>
+    </ul>
+</div>
+
+<hr>
+
+<h2>2.8 PENDING_ACTIONS Table</h2>
+<p>Manager requests requiring admin approval workflow.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>TEXT</td><td>PRIMARY KEY</td><td>UUID for unique action identifier</td></tr>
+    <tr><td><span class="code">requested_by_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>Manager who requested the action</td></tr>
+    <tr><td><span class="code">target_user_id</span></td><td>INTEGER</td><td>NOT NULL, FOREIGN KEY</td><td>User affected by the action</td></tr>
+    <tr><td><span class="code">action_type</span></td><td>TEXT</td><td>NOT NULL, CHECK</td><td>Action type</td></tr>
+    <tr><td><span class="code">new_value</span></td><td>TEXT</td><td>-</td><td>New value for the action</td></tr>
+    <tr><td><span class="code">requested_date</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Request creation date</td></tr>
+    <tr><td><span class="code">status</span></td><td>TEXT</td><td>DEFAULT 'PENDING', CHECK</td><td>Status</td></tr>
+    <tr><td><span class="code">rejection_reason</span></td><td>TEXT</td><td>-</td><td>Reason for rejection</td></tr>
+    <tr><td><span class="code">processed_by_id</span></td><td>INTEGER</td><td>FOREIGN KEY</td><td>Admin who processed the action</td></tr>
+    <tr><td><span class="code">processed_date</span></td><td>DATETIME</td><td>-</td><td>Date when action was processed</td></tr>
+</table>
+
+<div class="enum-list">
+    <strong>Action Type Enum Values:</strong>
+    <ul>
+        <li><span class="code">SUSPEND</span> - Suspend user account</li>
+        <li><span class="code">CHANGE_TIER</span> - Change user's tier level</li>
+        <li><span class="code">DELETE</span> - Delete user account</li>
+    </ul>
+</div>
+
+<div class="enum-list">
+    <strong>Status Enum Values:</strong>
+    <ul>
+        <li><span class="code">PENDING</span> - Awaiting admin approval</li>
+        <li><span class="code">APPROVED</span> - Action approved and executed</li>
+        <li><span class="code">REJECTED</span> - Action rejected by admin</li>
+    </ul>
+</div>
+
+<hr>
+
+<h2>2.9 SKILL_GAPS Table</h2>
+<p>Cached skill gap analysis results per user.</p>
+
+<table>
+    <tr><th>Column</th><th>Data Type</th><th>Constraints</th><th>Description</th></tr>
+    <tr><td><span class="code">id</span></td><td>INTEGER</td><td>PRIMARY KEY, AUTOINCREMENT</td><td>Unique skill gap record identifier</td></tr>
+    <tr><td><span class="code">user_id</span></td><td>INTEGER</td><td>NOT NULL, UNIQUE, FOREIGN KEY</td><td>User the analysis belongs to</td></tr>
+    <tr><td><span class="code">punctuality_score</span></td><td>REAL</td><td>DEFAULT 0</td><td>Average punctuality score</td></tr>
+    <tr><td><span class="code">teamwork_score</span></td><td>REAL</td><td>DEFAULT 0</td><td>Average teamwork score</td></tr>
+    <tr><td><span class="code">productivity_score</span></td><td>REAL</td><td>DEFAULT 0</td><td>Average productivity score</td></tr>
+    <tr><td><span class="code">leadership_score</span></td><td>REAL</td><td>DEFAULT 0</td><td>Average leadership score (managers)</td></tr>
+    <tr><td><span class="code">vision_score</span></td><td>REAL</td><td>DEFAULT 0</td><td>Average vision score (managers)</td></tr>
+    <tr><td><span class="code">managerial_score</span></td><td>REAL</td><td>DEFAULT 0</td><td>Average managerial score (managers)</td></tr>
+    <tr><td><span class="code">gaps</span></td><td>TEXT</td><td>-</td><td>Comma-separated list of identified gaps</td></tr>
+    <tr><td><span class="code">last_updated</span></td><td>DATETIME</td><td>DEFAULT CURRENT_TIMESTAMP</td><td>Last analysis date</td></tr>
+</table>
+
+<div class="business-rule">
+    <strong>Business Rules:</strong>
+    <ul>
+        <li>One skill gap record per user (UNIQUE constraint on user_id)</li>
+        <li>Scores below 3.0 are considered skill gaps</li>
+        <li>Extended metrics (leadership, vision, managerial) only tracked for managers</li>
+    </ul>
+</div>
+
+<div class="page-break"></div>
+
+<!-- RELATIONSHIP MAPPING -->
+<h1>3. Relationship Mapping Summary</h1>
+
+<table>
+    <tr><th>Relationship</th><th>Type</th><th>Description</th></tr>
+    <tr><td>users.manager_id → users.id</td><td>Many-to-One (Self)</td><td>Employees report to managers</td></tr>
+    <tr><td>reviews.employee_id → users.id</td><td>Many-to-One</td><td>Multiple reviews per employee</td></tr>
+    <tr><td>reviews.reviewer_id → users.id</td><td>Many-to-One</td><td>Reviewer can give multiple reviews</td></tr>
+    <tr><td>goals.employee_id → users.id</td><td>Many-to-One</td><td>Employee has multiple goals</td></tr>
+    <tr><td>goals.creator_id → users.id</td><td>Many-to-One</td><td>Creator can create goals for others</td></tr>
+    <tr><td>training_recommendations.recipient_id → users.id</td><td>Many-to-One</td><td>Employee receives recommendations</td></tr>
+    <tr><td>training_recommendations.recommender_id → users.id</td><td>Many-to-One</td><td>Manager recommends training</td></tr>
+    <tr><td>peer_reviews.reviewer_id → users.id</td><td>Many-to-One</td><td>Employee can give multiple peer reviews</td></tr>
+    <tr><td>peer_reviews.reviewed_id → users.id</td><td>Many-to-One</td><td>Employee can receive multiple peer reviews</td></tr>
+    <tr><td>upward_reviews.reviewer_id → users.id</td><td>Many-to-One</td><td>Employee can review multiple managers</td></tr>
+    <tr><td>upward_reviews.manager_id → users.id</td><td>Many-to-One</td><td>Manager can receive multiple upward reviews</td></tr>
+    <tr><td>pending_actions.requested_by_id → users.id</td><td>Many-to-One</td><td>Manager can request multiple actions</td></tr>
+    <tr><td>pending_actions.target_user_id → users.id</td><td>Many-to-One</td><td>User can be target of multiple actions</td></tr>
+    <tr><td>pending_actions.processed_by_id → users.id</td><td>Many-to-One</td><td>Admin processes multiple actions</td></tr>
+    <tr><td>skill_gaps.user_id → users.id</td><td>One-to-One</td><td>Each user has one skill gap record</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- BUSINESS REQUIREMENTS -->
+<h1>4. Business Requirements</h1>
+
+<h2>4.1 User Management</h2>
+<table>
+    <tr><th>Req ID</th><th>Requirement</th><th>Implementation</th></tr>
+    <tr><td>BR-U01</td><td>System must support multiple user roles</td><td>role column with ENUM check constraint</td></tr>
+    <tr><td>BR-U02</td><td>New users must be approved before access</td><td>status defaults to 'PENDING'</td></tr>
+    <tr><td>BR-U03</td><td>Users are organized in a hierarchical structure</td><td>manager_id self-referencing FK, tier_level column</td></tr>
+    <tr><td>BR-U04</td><td>Admin can suspend user accounts</td><td>status can be set to 'SUSPENDED'</td></tr>
+    <tr><td>BR-U05</td><td>Each user has a unique username</td><td>username column has UNIQUE constraint</td></tr>
+    <tr><td>BR-U06</td><td>System must have a default admin user</td><td>Default INSERT in schema creates admin account</td></tr>
+</table>
+
+<h2>4.2 Performance Reviews</h2>
+<table>
+    <tr><th>Req ID</th><th>Requirement</th><th>Implementation</th></tr>
+    <tr><td>BR-R01</td><td>Employees can receive reviews from multiple reviewers</td><td>reviewer_id tracks who gave each review</td></tr>
+    <tr><td>BR-R02</td><td>Reviews contain multiple performance categories</td><td>6 score columns (punctuality, teamwork, etc.)</td></tr>
+    <tr><td>BR-R03</td><td>All scores must be between 0-10</td><td>CHECK constraints on all score columns</td></tr>
+    <tr><td>BR-R04</td><td>Basic employees assessed on 3 categories</td><td>Punctuality, Teamwork, Productivity</td></tr>
+    <tr><td>BR-R05</td><td>Managers assessed on 6 categories</td><td>Extended columns for Leadership, Vision, Managerial</td></tr>
+    <tr><td>BR-R06</td><td>Reviews support anonymous feedback</td><td>reviewer_id can be NULL</td></tr>
+</table>
+
+<h2>4.3 Peer Reviews</h2>
+<table>
+    <tr><th>Req ID</th><th>Requirement</th><th>Implementation</th></tr>
+    <tr><td>BR-PR01</td><td>Employees can review teammates under same manager</td><td>peer_reviews table with reviewer_id and reviewed_id</td></tr>
+    <tr><td>BR-PR02</td><td>Peer reviews assess 3 categories</td><td>3 score columns with 1-5 range</td></tr>
+    <tr><td>BR-PR03</td><td>Peer reviews are anonymous</td><td>Reviewer identity not exposed to reviewed user</td></tr>
+</table>
+
+<h2>4.4 Upward Reviews</h2>
+<table>
+    <tr><th>Req ID</th><th>Requirement</th><th>Implementation</th></tr>
+    <tr><td>BR-UR01</td><td>Employees can review their direct manager</td><td>upward_reviews table links employee to manager</td></tr>
+    <tr><td>BR-UR02</td><td>Upward reviews assess 3 categories</td><td>3 score columns with 1-5 range</td></tr>
+    <tr><td>BR-UR03</td><td>Upward reviews are anonymous</td><td>Reviewer identity not exposed to manager</td></tr>
+</table>
+
+<h2>4.5 Pending Actions (Admin Approval)</h2>
+<table>
+    <tr><th>Req ID</th><th>Requirement</th><th>Implementation</th></tr>
+    <tr><td>BR-PA01</td><td>Managers can request actions requiring admin approval</td><td>pending_actions table with status workflow</td></tr>
+    <tr><td>BR-PA02</td><td>Support SUSPEND, CHANGE_TIER, DELETE actions</td><td>action_type CHECK constraint</td></tr>
+    <tr><td>BR-PA03</td><td>Track action status</td><td>status column with CHECK constraint</td></tr>
+    <tr><td>BR-PA04</td><td>Record rejection reasons</td><td>rejection_reason TEXT column</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<!-- DATABASE INDEXES -->
+<h1>5. Database Indexes</h1>
+
+<table>
+    <tr><th>Index Name</th><th>Table</th><th>Column(s)</th><th>Purpose</th></tr>
+    <tr><td>idx_users_username</td><td>users</td><td>username</td><td>Fast username lookup for login</td></tr>
+    <tr><td>idx_users_manager</td><td>users</td><td>manager_id</td><td>Efficient hierarchy queries</td></tr>
+    <tr><td>idx_reviews_employee</td><td>reviews</td><td>employee_id</td><td>Fast retrieval of employee reviews</td></tr>
+    <tr><td>idx_reviews_reviewer</td><td>reviews</td><td>reviewer_id</td><td>Find reviews given by a user</td></tr>
+    <tr><td>idx_goals_employee</td><td>goals</td><td>employee_id</td><td>Fast goal lookup by employee</td></tr>
+    <tr><td>idx_training_recipient</td><td>training_recommendations</td><td>recipient_id</td><td>Efficient training lookup</td></tr>
+    <tr><td>idx_peer_reviews_reviewer</td><td>peer_reviews</td><td>reviewer_id</td><td>Find peer reviews given by a user</td></tr>
+    <tr><td>idx_peer_reviews_reviewed</td><td>peer_reviews</td><td>reviewed_id</td><td>Find peer reviews received by a user</td></tr>
+    <tr><td>idx_upward_reviews_reviewer</td><td>upward_reviews</td><td>reviewer_id</td><td>Find upward reviews by employee</td></tr>
+    <tr><td>idx_upward_reviews_manager</td><td>upward_reviews</td><td>manager_id</td><td>Find upward reviews for a manager</td></tr>
+    <tr><td>idx_pending_actions_status</td><td>pending_actions</td><td>status</td><td>Filter actions by status</td></tr>
+    <tr><td>idx_pending_actions_target</td><td>pending_actions</td><td>target_user_id</td><td>Find actions affecting a user</td></tr>
+    <tr><td>idx_skill_gaps_user</td><td>skill_gaps</td><td>user_id</td><td>Fast skill gap lookup by user</td></tr>
+</table>
+
+<hr>
+
+<!-- DATA INTEGRITY -->
+<h1>6. Data Integrity Rules</h1>
+
+<h3>Referential Integrity</h3>
+<ul>
+    <li>Cascade delete for employee-owned data (reviews, goals, recommendations)</li>
+    <li>Set NULL for reference fields when related user is deleted</li>
+</ul>
+
+<h3>Domain Constraints</h3>
+<ul>
+    <li>Review scores limited to 0-10 range</li>
+    <li>Peer/Upward review scores limited to 1-5 range</li>
+    <li>Roles must be from predefined enum list</li>
+    <li>Status must be from predefined enum list</li>
+</ul>
+
+<h3>Uniqueness</h3>
+<ul>
+    <li>Usernames must be unique across the system</li>
+    <li>Course names must be unique</li>
+    <li>Each user can only have one skill gap record</li>
+</ul>
+
+<hr>
+
+<!-- DEFAULT DATA -->
+<h1>7. Default Data</h1>
+
+<h3>System Administrator</h3>
+<table>
+    <tr><td><strong>Username:</strong></td><td>admin</td></tr>
+    <tr><td><strong>Password:</strong></td><td>admin</td></tr>
+    <tr><td><strong>Role:</strong></td><td>ADMIN</td></tr>
+    <tr><td><strong>Status:</strong></td><td>ACTIVE</td></tr>
+    <tr><td><strong>Tier Level:</strong></td><td>0</td></tr>
+</table>
+
+<h3>Pre-loaded Training Courses</h3>
+<ol>
+    <li>Leadership Fundamentals</li>
+    <li>Time Management</li>
+    <li>Team Communication</li>
+    <li>Project Management</li>
+    <li>Conflict Resolution</li>
+</ol>
+
+<hr>
+
+<div style="text-align: center; color: #718096; margin-top: 40px; font-size: 10pt;">
+    <p><strong>End of Document</strong></p>
+    <p>Performance Review System - Database Documentation Report</p>
+    <p>Generated: December 22, 2024</p>
+</div>
+
+</body>
+</html>

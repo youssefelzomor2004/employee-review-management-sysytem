@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Review System - Database Documentation</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-blue: #58a6ff;
+            --accent-green: #3fb950;
+            --accent-purple: #a371f7;
+            --accent-orange: #d29922;
+            --border-color: #30363d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: var(--accent-blue);
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        h3 {
+            color: var(--accent-purple);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .erd-container {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        
+        th {
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+        
+        td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+        
+        tr:hover td {
+            background: var(--bg-tertiary);
+        }
+        
+        code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            color: var(--accent-orange);
+            font-size: 0.85em;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin: 2px;
+        }
+        
+        .badge-pk { background: #238636; color: white; }
+        .badge-fk { background: #1f6feb; color: white; }
+        .badge-uk { background: #8957e5; color: white; }
+        .badge-nn { background: #d29922; color: black; }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+        }
+        
+        .tab:hover, .tab.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .nav a:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-blue);
+        }
+        
+        .spacer {
+            height: 80px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(88, 166, 255, 0.1), rgba(163, 113, 247, 0.1));
+            border-left: 4px solid var(--accent-blue);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        
+        .tier-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 2rem;
+        }
+        
+        .tier-box {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .tier-3 { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+        .tier-2 { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+        .tier-1 { background: linear-gradient(135deg, #059669, #10b981); }
+        .tier-0 { background: linear-gradient(135deg, #dc2626, #ef4444); }
+        
+        .arrow-down {
+            font-size: 2rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="#erd">📊 ERD</a>
+        <a href="#tables">🗃️ Tables</a>
+        <a href="#relationships">🔗 Relationships</a>
+        <a href="#business">📋 Business Rules</a>
+        <a href="#hierarchy">👥 Hierarchy</a>
+    </nav>
+    
+    <div class="spacer"></div>
+    
+    <div class="container">
+        <h1>🗄️ Performance Review System</h1>
+        <p class="subtitle">Database Documentation - ERD, Mapping & Business Requirements</p>
+        
+        <!-- ERD Section -->
+        <section id="erd">
+            <h2>📊 Entity Relationship Diagram (ERD)</h2>
+            
+            <div class="erd-container">
+                <div class="mermaid">
+erDiagram
+    USERS ||--o{ USERS : "manages"
+    USERS ||--o{ REVIEWS : "receives"
+    USERS ||--o{ REVIEWS : "gives"
+    USERS ||--o{ GOALS : "has"
+    USERS ||--o{ GOALS : "creates"
+    USERS ||--o{ TRAINING_RECOMMENDATIONS : "receives"
+    USERS ||--o{ TRAINING_RECOMMENDATIONS : "recommends"
+    COURSES ||--o{ TRAINING_RECOMMENDATIONS : "referenced_by"
+
+    USERS {
+        INTEGER id PK
+        TEXT username UK
+        TEXT password
+        TEXT name
+        TEXT role
+        TEXT status
+        INTEGER tier_level
+        INTEGER manager_id FK
+        DATETIME created_date
+    }
+
+    REVIEWS {
+        INTEGER id PK
+        INTEGER employee_id FK
+        INTEGER reviewer_id FK
+        INTEGER punctuality
+        INTEGER teamwork
+        INTEGER productivity
+        INTEGER leadership
+        INTEGER vision
+        INTEGER managerial_skills
+        TEXT comments
+        TEXT status
+        DATETIME created_date
+    }
+
+    GOALS {
+        INTEGER id PK
+        INTEGER employee_id FK
+        INTEGER creator_id FK
+        TEXT description
+        TEXT status
+        DATETIME created_date
+    }
+
+    COURSES {
+        INTEGER id PK
+        TEXT name UK
+        TEXT description
+        DATETIME created_date
+    }
+
+    TRAINING_RECOMMENDATIONS {
+        INTEGER id PK
+        INTEGER recipient_id FK
+        INTEGER recommender_id FK
+        TEXT course_name
+        DATETIME created_date
+    }
+                </div>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item"><span class="badge badge-pk">PK</span> Primary Key</div>
+                <div class="legend-item"><span class="badge badge-fk">FK</span> Foreign Key</div>
+                <div class="legend-item"><span class="badge badge-uk">UK</span> Unique Key</div>
+                <div class="legend-item"><span class="badge badge-nn">NN</span> Not Null</div>
+            </div>
+        </section>
+        
+        <!-- Tables Section -->
+        <section id="tables">
+            <h2>🗃️ Table Schemas</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('users')">👤 USERS</div>
+                <div class="tab" onclick="showTab('reviews')">⭐ REVIEWS</div>
+                <div class="tab" onclick="showTab('goals')">🎯 GOALS</div>
+                <div class="tab" onclick="showTab('courses')">📚 COURSES</div>
+                <div class="tab" onclick="showTab('training')">🎓 TRAINING</div>
+            </div>
+            
+            <div id="users" class="tab-content active">
+                <div class="card">
+                    <h3>👤 USERS Table</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Stores user accounts, roles, and organizational hierarchy</p>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Constraints</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-pk">PK</span> AUTOINCREMENT</td>
+                            <td>Unique user identifier</td>
+                        </tr>
+                        <tr>
+                            <td><code>username</code></td>
+                            <td>TEXT</td>
+                            <td><span class="badge badge-uk">UK</span> <span class="badge badge-nn">NN</span></td>
+                            <td>Login username</td>
+                        </tr>
+                        <tr>
+                            <td><code>password</code></td>
+                            <td>TEXT</td>
+                            <td><span class="badge badge-nn">NN</span></td>
+                            <td>User password</td>
+                        </tr>
+                        <tr>
+                            <td><code>name</code></td>
+                            <td>TEXT</td>
+                            <td><span class="badge badge-nn">NN</span></td>
+                            <td>Display name</td>
+                        </tr>
+                        <tr>
+                            <td><code>role</code></td>
+                            <td>TEXT</td>
+                            <td>DEFAULT 'EMPLOYEE'</td>
+                            <td>ADMIN | EMPLOYEE | MANAGER_EMPLOYEE | HIGHBOARD_MANAGER</td>
+                        </tr>
+                        <tr>
+                            <td><code>status</code></td>
+                            <td>TEXT</td>
+                            <td>DEFAULT 'PENDING'</td>
+                            <td>ACTIVE | PENDING | SUSPENDED</td>
+                        </tr>
+                        <tr>
+                            <td><code>tier_level</code></td>
+                            <td>INTEGER</td>
+                            <td>DEFAULT 1</td>
+                            <td>Organizational tier (1-3)</td>
+                        </tr>
+                        <tr>
+                            <td><code>manager_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span> → users(id)</td>
+                            <td>Reference to manager</td>
+                        </tr>
+                        <tr>
+                            <td><code>created_date</code></td>
+                            <td>DATETIME</td>
+                            <td>DEFAULT CURRENT_TIMESTAMP</td>
+                            <td>Account creation date</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="reviews" class="tab-content">
+                <div class="card">
+                    <h3>⭐ REVIEWS Table</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Performance evaluations with 6 scoring categories (0-10 scale)</p>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Constraints</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-pk">PK</span></td>
+                            <td>Unique review ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>employee_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span> <span class="badge badge-nn">NN</span></td>
+                            <td>Employee being reviewed</td>
+                        </tr>
+                        <tr>
+                            <td><code>reviewer_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span></td>
+                            <td>Person giving review</td>
+                        </tr>
+                        <tr>
+                            <td><code>punctuality</code></td>
+                            <td>INTEGER</td>
+                            <td>CHECK(0-10)</td>
+                            <td>⏰ Punctuality score</td>
+                        </tr>
+                        <tr>
+                            <td><code>teamwork</code></td>
+                            <td>INTEGER</td>
+                            <td>CHECK(0-10)</td>
+                            <td>🤝 Teamwork score</td>
+                        </tr>
+                        <tr>
+                            <td><code>productivity</code></td>
+                            <td>INTEGER</td>
+                            <td>CHECK(0-10)</td>
+                            <td>📈 Productivity score</td>
+                        </tr>
+                        <tr>
+                            <td><code>leadership</code></td>
+                            <td>INTEGER</td>
+                            <td>CHECK(0-10)</td>
+                            <td>👑 Leadership (managers only)</td>
+                        </tr>
+                        <tr>
+                            <td><code>vision</code></td>
+                            <td>INTEGER</td>
+                            <td>CHECK(0-10)</td>
+                            <td>🔮 Vision (managers only)</td>
+                        </tr>
+                        <tr>
+                            <td><code>managerial_skills</code></td>
+                            <td>INTEGER</td>
+                            <td>CHECK(0-10)</td>
+                            <td>📋 Managerial (managers only)</td>
+                        </tr>
+                        <tr>
+                            <td><code>comments</code></td>
+                            <td>TEXT</td>
+                            <td>-</td>
+                            <td>Review comments</td>
+                        </tr>
+                        <tr>
+                            <td><code>status</code></td>
+                            <td>TEXT</td>
+                            <td>DEFAULT 'SUBMITTED'</td>
+                            <td>Review status</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="goals" class="tab-content">
+                <div class="card">
+                    <h3>🎯 GOALS Table</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Employee objectives and targets</p>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Constraints</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-pk">PK</span></td>
+                            <td>Unique goal ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>employee_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span> <span class="badge badge-nn">NN</span></td>
+                            <td>Goal owner</td>
+                        </tr>
+                        <tr>
+                            <td><code>creator_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span></td>
+                            <td>Who created the goal</td>
+                        </tr>
+                        <tr>
+                            <td><code>description</code></td>
+                            <td>TEXT</td>
+                            <td><span class="badge badge-nn">NN</span></td>
+                            <td>Goal description</td>
+                        </tr>
+                        <tr>
+                            <td><code>status</code></td>
+                            <td>TEXT</td>
+                            <td>DEFAULT 'ACTIVE'</td>
+                            <td>ACTIVE | COMPLETED</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="courses" class="tab-content">
+                <div class="card">
+                    <h3>📚 COURSES Table</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Training course catalog</p>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Constraints</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-pk">PK</span></td>
+                            <td>Unique course ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>name</code></td>
+                            <td>TEXT</td>
+                            <td><span class="badge badge-uk">UK</span> <span class="badge badge-nn">NN</span></td>
+                            <td>Course name</td>
+                        </tr>
+                        <tr>
+                            <td><code>description</code></td>
+                            <td>TEXT</td>
+                            <td>-</td>
+                            <td>Course description</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="training" class="tab-content">
+                <div class="card">
+                    <h3>🎓 TRAINING_RECOMMENDATIONS Table</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Training assignments from managers to employees</p>
+                    <table>
+                        <tr>
+                            <th>Column</th>
+                            <th>Type</th>
+                            <th>Constraints</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-pk">PK</span></td>
+                            <td>Unique recommendation ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>recipient_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span> <span class="badge badge-nn">NN</span></td>
+                            <td>Employee receiving training</td>
+                        </tr>
+                        <tr>
+                            <td><code>recommender_id</code></td>
+                            <td>INTEGER</td>
+                            <td><span class="badge badge-fk">FK</span></td>
+                            <td>Who recommended it</td>
+                        </tr>
+                        <tr>
+                            <td><code>course_name</code></td>
+                            <td>TEXT</td>
+                            <td><span class="badge badge-nn">NN</span></td>
+                            <td>Course name</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Relationships Section -->
+        <section id="relationships">
+            <h2>🔗 Relationship Mapping</h2>
+            
+            <div class="card">
+                <table>
+                    <tr>
+                        <th>From Table</th>
+                        <th>Column</th>
+                        <th>To Table</th>
+                        <th>Type</th>
+                        <th>On Delete</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>users</code></td>
+                        <td>manager_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One (Self)</td>
+                        <td>SET NULL</td>
+                        <td>Employee → Manager hierarchy</td>
+                    </tr>
+                    <tr>
+                        <td><code>reviews</code></td>
+                        <td>employee_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One</td>
+                        <td>CASCADE</td>
+                        <td>Review → Employee being reviewed</td>
+                    </tr>
+                    <tr>
+                        <td><code>reviews</code></td>
+                        <td>reviewer_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One</td>
+                        <td>SET NULL</td>
+                        <td>Review → Reviewer</td>
+                    </tr>
+                    <tr>
+                        <td><code>goals</code></td>
+                        <td>employee_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One</td>
+                        <td>CASCADE</td>
+                        <td>Goal → Goal owner</td>
+                    </tr>
+                    <tr>
+                        <td><code>goals</code></td>
+                        <td>creator_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One</td>
+                        <td>SET NULL</td>
+                        <td>Goal → Creator</td>
+                    </tr>
+                    <tr>
+                        <td><code>training_recommendations</code></td>
+                        <td>recipient_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One</td>
+                        <td>CASCADE</td>
+                        <td>Recommendation → Recipient</td>
+                    </tr>
+                    <tr>
+                        <td><code>training_recommendations</code></td>
+                        <td>recommender_id</td>
+                        <td><code>users</code></td>
+                        <td>Many-to-One</td>
+                        <td>SET NULL</td>
+                        <td>Recommendation → Recommender</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Business Requirements Section -->
+        <section id="business">
+            <h2>📋 Business Requirements</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h3>👤 User Management</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-secondary);">
+                        <li>4 user roles: Admin, Employee, Manager-Employee, Highboard Manager</li>
+                        <li>New users default to PENDING status</li>
+                        <li>Unique usernames required</li>
+                        <li>Admin can suspend accounts</li>
+                        <li>Default admin user created on setup</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>📊 Performance Reviews</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-secondary);">
+                        <li><strong>Basic (All):</strong> Punctuality, Teamwork, Productivity</li>
+                        <li><strong>Extended (Managers):</strong> Leadership, Vision, Managerial Skills</li>
+                        <li>All scores: 0-10 scale</li>
+                        <li>Anonymous reviews supported</li>
+                        <li>Comments optional</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>🎯 Goal Management</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-secondary);">
+                        <li>Self-created or manager-assigned goals</li>
+                        <li>Status tracking: ACTIVE → COMPLETED</li>
+                        <li>Users can delete own-created goals</li>
+                        <li>Deleted with employee (CASCADE)</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h3>🎓 Training & Development</h3>
+                    <ul style="padding-left: 1.5rem; color: var(--text-secondary);">
+                        <li>Central course catalog</li>
+                        <li>Managers recommend courses to employees</li>
+                        <li>Tracks who recommended what</li>
+                        <li>5 default courses pre-loaded</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Hierarchy Section -->
+        <section id="hierarchy">
+            <h2>👥 Organizational Hierarchy</h2>
+            
+            <div class="card">
+                <div class="tier-visual">
+                    <div class="tier-box tier-0">
+                        <strong>Tier 0</strong><br>
+                        🔴 ADMIN<br>
+                        <small>System Administrator</small>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="tier-box tier-3">
+                        <strong>Tier 3</strong><br>
+                        👑 HIGHBOARD_MANAGER<br>
+                        <small>CEO, Executives</small>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="tier-box tier-2">
+                        <strong>Tier 2</strong><br>
+                        👔 MANAGER_EMPLOYEE<br>
+                        <small>Middle Managers</small>
+                    </div>
+                    <div class="arrow-down">↓</div>
+                    <div class="tier-box tier-1">
+                        <strong>Tier 1</strong><br>
+                        👤 EMPLOYEE<br>
+                        <small>Regular Employees</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <strong>💡 Key Points:</strong>
+                <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                    <li>Employees report to managers via <code>manager_id</code> self-referencing FK</li>
+                    <li>Recursive CTE queries support full hierarchy traversal</li>
+                    <li>Managers can have multiple direct reports</li>
+                    <li>Tier level indicates position in organizational structure</li>
+                </ul>
+            </div>
+        </section>
+        
+        <footer style="text-align: center; margin-top: 3rem; padding: 2rem; color: var(--text-secondary); border-top: 1px solid var(--border-color);">
+            <p>Performance Review System Database Documentation</p>
+            <p><small>Generated on: <span id="date"></span></small></p>
+        </footer>
+    </div>
+    
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22'
+            }
+        });
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        document.getElementById('date').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>

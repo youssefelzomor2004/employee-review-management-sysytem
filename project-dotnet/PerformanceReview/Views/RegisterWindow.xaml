@@ -1,0 +1,29 @@
+<Window x:Class="PerformanceReview.Views.RegisterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create Account" Width="420" Height="450"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        Background="{StaticResource SurfaceBrush}">
+    <Border Style="{StaticResource CardBorder}" Margin="16">
+        <StackPanel>
+            <TextBlock Text="📝 Create New Account" Style="{StaticResource HeadingLabel}" FontSize="20" Margin="0,0,0,16"/>
+
+            <TextBlock Text="Full Name" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,0,0,4"/>
+            <TextBox x:Name="NameBox" Style="{StaticResource DarkTextBox}" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Username" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,0,0,4"/>
+            <TextBox x:Name="RegUsernameBox" Style="{StaticResource DarkTextBox}" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Password" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,0,0,4"/>
+            <PasswordBox x:Name="RegPasswordBox" Style="{StaticResource DarkPasswordBox}" Margin="0,0,0,4"/>
+            <TextBlock Text="• 8+ chars • Uppercase • Lowercase • Number • Symbol"
+                       Foreground="{StaticResource TextMutedBrush}" FontSize="11" Margin="0,0,0,8"/>
+
+            <TextBlock x:Name="RegErrorLabel" Foreground="{StaticResource DangerBrush}" FontSize="12"
+                       Visibility="Collapsed" Margin="0,0,0,8"/>
+
+            <Button Content="Create Account" Style="{StaticResource PrimaryButton}"
+                    Click="RegisterBtn_Click" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+    </Border>
+</Window>
